@@ -5,6 +5,7 @@ import com.permission.utils.global.exception.GlobalException;
 import com.permission.utils.global.result.GlobalResult;
 import com.permission.utils.global.result.GlobalResultUtil;
 import com.permission.utils.global.result.ResultEnum;
+import com.permission.wechat.WeChatUtil;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,32 @@ public class UploadServiceImpl implements UploadService {
         }
         List<String> filesName = new LinkedList<>();
         for (MultipartFile file : files) {
+            filesName.add(uploadFile(file, folderName));
+        }
+        return GlobalResultUtil.success(ResultEnum.SUCCESS, filesName);
+    }
+
+    /**
+     * 小程序文件上传
+     *
+     * @param request    请求
+     * @param folderName 文件夹
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    @Override
+    public GlobalResult appletUploadFiles(HttpServletRequest request, String folderName) throws Exception {
+        List<MultipartFile> files = ((MultipartHttpServletRequest) request)
+                .getFiles("file");
+        if (files.isEmpty()) {
+            throw new GlobalException(ResultEnum.NO_FILE);
+        }
+        List<String> filesName = new LinkedList<>();
+        for (MultipartFile file : files) {
+            boolean b = WeChatUtil.appletCheckPhoto(file);
+            if (!b) {
+                return GlobalResultUtil.fail(100, "上传的图片违规");
+            }
             filesName.add(uploadFile(file, folderName));
         }
         return GlobalResultUtil.success(ResultEnum.SUCCESS, filesName);

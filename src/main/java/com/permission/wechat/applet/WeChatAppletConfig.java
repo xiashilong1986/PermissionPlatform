@@ -51,6 +51,11 @@ public class WeChatAppletConfig implements WXPayConfig {
     private String code = "CODE";
 
     /**
+     * 获取全局token URL
+     */
+    private String globalAccessTokenUrl;
+
+    /**
      * 证书路径
      */
     private String certPath = "";
@@ -77,6 +82,7 @@ public class WeChatAppletConfig implements WXPayConfig {
         WeChatAppletConfig weChatConfig = new WeChatAppletConfig(appId, mchId, appSecret, apiKey);
         weChatConfig.oauth2Url = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=CODE&grant_type=authorization_code",
                 appId, appSecret);
+        weChatConfig.globalAccessTokenUrl = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret);
         return weChatConfig;
     }
 

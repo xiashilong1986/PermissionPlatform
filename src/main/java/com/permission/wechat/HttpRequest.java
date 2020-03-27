@@ -28,7 +28,7 @@ import java.util.List;
  * * to: xm             *
  * **********************
  **/
-class HttpRequest {
+public class HttpRequest {
 
     /**
      * 请求
@@ -39,7 +39,7 @@ class HttpRequest {
      * @param responseType 返回类型
      * @return Object 返回对象
      */
-    static Object restHttpRequest(String url, HttpMethod method, Object param, Class<?> responseType) {
+    public static Object restHttpRequest(String url, HttpMethod method, Object param, Class<?> responseType) {
         HttpEntity<Object> requestEntity = new HttpEntity<>(param, getHeaders());
         return getRestTemplate().exchange(getUri(url), method, requestEntity, responseType).getBody();
     }

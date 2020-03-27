@@ -45,6 +45,20 @@ public class UploadController {
     }
 
     /**
+     * 小程序文件上传
+     *
+     * @param request    请求
+     * @param folderName 文件夹
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    @AccessLimit(type = LimitType.MODIFY)
+    @PostMapping(value = "/open/appletUploadFiles")
+    public GlobalResult appletUploadFiles(HttpServletRequest request, String folderName) throws Exception {
+        return uploadService.appletUploadFiles(request, folderName);
+    }
+
+    /**
      * 自定义文件名上传
      *
      * @param request    请求

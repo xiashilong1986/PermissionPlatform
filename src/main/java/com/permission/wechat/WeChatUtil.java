@@ -1,18 +1,29 @@
 package com.permission.wechat;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.permission.utils.global.exception.GlobalException;
+import com.permission.wechat.applet.AppletAccessTokenFactory;
 import com.permission.wechat.applet.WeChatAppletConfig;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -509,6 +520,52 @@ public class WeChatUtil {
      */
     public static Map<String, String> transferToPocketMoneyApplet(Integer amount, String openId, String ip, String desc, String partnerTradeNo) throws Exception {
         return transferToPocketMoney(amount, openId, ip, desc, partnerTradeNo, appletWeChatPay, WE_CHAT_APPLET_CONFIG);
+    }
+
+    /**
+     * 验证微信小程序上传图片
+     *
+     * @param multipartFile 文件对象
+     * @return boolean
+     */
+    public static boolean appletCheckPhoto(MultipartFile multipartFile) {
+        try {
+
+            CloseableHttpClient httpclient = HttpClients.createDefault();
+
+            CloseableHttpResponse response;
+
+            HttpPost request = new HttpPost("https://api.weixin.qq.com/wxa/img_sec_check?access_token=" + AppletAccessTokenFactory.get());
+            request.addHeader("Content-Type", "application/octet-stream");
+
+            InputStream inputStream = multipartFile.getInputStream();
+
+            byte[] byt = new byte[inputStream.available()];
+            inputStream.read(byt);
+            request.setEntity(new ByteArrayEntity(byt, ContentType.create(multipartFile.getContentType())));
+
+            response = httpclient.execute(request);
+            HttpEntity httpEntity = response.getEntity();
+            String result = EntityUtils.toString(httpEntity, "UTF-8");// 转成string
+            JSONObject jso = JSONObject.parseObject(result);
+            return getResult(jso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("----------------调用腾讯内容过滤系统出错------------------");
+            return true;
+        }
+    }
+
+    private static boolean getResult(JSONObject jso) {
+        Object e = jso.get("errcode");
+        int errCode = (int) e;
+        if (errCode == 0) {
+            return true;
+        } else if (errCode == 87014) {
+            log.info("-----------图片内容违规-----------");
+            return false;
+        }
+        return true;
     }
 
     /**

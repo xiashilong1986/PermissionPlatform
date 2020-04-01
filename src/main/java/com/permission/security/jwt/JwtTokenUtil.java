@@ -46,7 +46,7 @@ public class JwtTokenUtil {
     public final static Long tokenExpireTime;
 
     static {
-        secret = "mySecret";
+        secret = "abc";
         tokenHeader = "Authorization";
         tokenPrefix = "Bearer ";
         authHeader = "role";

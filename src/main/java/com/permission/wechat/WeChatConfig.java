@@ -53,7 +53,7 @@ public class WeChatConfig implements WXPayConfig {
     /**
      * 证书路径
      */
-    private String certPath = "/usr/local/cert/wx_cert.p12";
+    private String certPath = "";
 
     /**
      * 网页授权 code URL

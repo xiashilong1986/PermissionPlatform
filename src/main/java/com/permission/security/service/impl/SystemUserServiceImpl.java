@@ -5,9 +5,12 @@ import com.permission.security.accesslimit.AccessLimit;
 import com.permission.security.dao.SystemUserDao;
 import com.permission.security.entity.SystemButton;
 import com.permission.security.entity.SystemMenu;
+import com.permission.security.entity.SystemRole;
 import com.permission.security.entity.SystemUser;
+import com.permission.security.jwt.JwtTokenUtil;
 import com.permission.security.service.SystemButtonService;
 import com.permission.security.service.SystemMenuService;
+import com.permission.security.service.SystemRoleService;
 import com.permission.security.service.SystemUserService;
 import com.permission.utils.global.exception.GlobalException;
 import com.permission.utils.global.exception.NullException;
@@ -26,10 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * **********************
@@ -51,11 +53,15 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
     //按钮
     private final SystemButtonService systemButtonService;
 
+    //角色
+    private final SystemRoleService systemRoleService;
+
     @Autowired
-    public SystemUserServiceImpl(SystemUserDao dao, SystemMenuService systemMenuService, SystemButtonService systemButtonService) {
+    public SystemUserServiceImpl(SystemUserDao dao, SystemMenuService systemMenuService, SystemButtonService systemButtonService, SystemRoleService systemRoleService) {
         this.dao = dao;
         this.systemMenuService = systemMenuService;
         this.systemButtonService = systemButtonService;
+        this.systemRoleService = systemRoleService;
     }
 
     /**
@@ -236,6 +242,49 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
         throw GlobalException.exception100("缓存中无用户信息");
     }
 
+    /**
+     * 授权登陆,适用于微信等第三方登陆后的系统授权
+     *
+     * @param roleId 授权的角色id
+     * @param authId 授权id 微信的openId等
+     * @param ip     登陆用户ip
+     * @return Map -> token : 授权后的令牌
+     * tokenExpireTime : 令牌有效时长
+     * router : vue路由对象
+     */
+    @Override
+    public Map<String, Object> authLogin(Long roleId, String authId, String ip) {
+        //获取系统角色
+        SystemRole role = systemRoleService.getOne(roleId);
+        List<SystemMenu> menuList = new ArrayList<>();
+        if (!StringUtils.isEmpty(role.getMenuIdList())) {
+            menuList = systemMenuService.getAll(role.getMenuIdList());
+        }
+        List<SystemButton> buttonList = new ArrayList<>();
+        if (!StringUtils.isEmpty(role.getButtonIdList())) {
+            buttonList = systemButtonService.getAll(role.getButtonIdList());
+        }
+        //验证角色权限,并赋值
+        SystemUser systemUser;
+        if (!menuList.isEmpty() || !buttonList.isEmpty()) {
+            systemUser = SystemUser.authInterfaceList(menuList, buttonList, authId);
+        } else {
+            throw GlobalException.exception100("授权登陆的角色无任何权限");
+        }
+        //获取token
+        String token = JwtTokenUtil.tokenPrefix + JwtTokenUtil.generateAccessToken(systemUser, ip);
+        //保存token到redis中,用户名是唯一的作为key, 登出,修改权限等操作用;设置的过期时间为token的过期时间
+        RedisUtil.set(systemUser.getUsername(), token, JwtTokenUtil.tokenExpireTime);
+        //返回对象
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("tokenExpireTime", JwtTokenUtil.tokenExpireTime);
+        map.put("router", systemUser.getRouter());
+        //为web-view保存信息
+        RedisUtil.set("web-view" + systemUser.getUsername(), JSONObject.toJSONString(map), JwtTokenUtil.tokenExpireTime);
+        return map;
+    }
+
 
     /**
      * Locates the user based on the username. In the actual implementation, the search
@@ -276,5 +325,14 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
     private void cleanRedis(Long id) {
         Optional<SystemUser> optional = dao.findById(id);
         optional.ifPresent(u -> RedisUtil.delete(u.getUsername()));
+    }
+
+    private String getOriginalPassword(String openId) {
+        try {
+            return URLEncoder.encode(openId.toLowerCase(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

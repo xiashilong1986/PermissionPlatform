@@ -104,8 +104,21 @@ public interface SystemUserService {
 
     /**
      * 获取用户登陆信息
+     *
      * @param username 用户名
      * @return map
      */
     Map getUserLoginContext(String username);
+
+    /**
+     * 授权登陆,适用于微信等第三方登陆后的系统授权
+     *
+     * @param roleId 授权的角色id
+     * @param authId 授权id 微信的openId等
+     * @param ip     登陆用户ip
+     * @return Map -> token : 授权后的令牌
+     * tokenExpireTime : 令牌有效时长
+     * router : vue路由对象
+     */
+    Map<String, Object> authLogin(Long roleId, String authId, String ip);
 }

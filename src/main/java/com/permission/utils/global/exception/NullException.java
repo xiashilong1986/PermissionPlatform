@@ -4,6 +4,7 @@ import com.permission.utils.global.result.ResultEnum;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * **********************
@@ -26,6 +27,12 @@ public class NullException {
         if (obj instanceof List) {
             List list = (List) obj;
             if (list.isEmpty()) {
+                throw new GlobalException(ResultEnum.NULL_DATA);
+            }
+        }
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            if (map.isEmpty()) {
                 throw new GlobalException(ResultEnum.NULL_DATA);
             }
         }

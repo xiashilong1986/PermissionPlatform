@@ -110,6 +110,13 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
     @Transient
     private List<RouterUtil.Router> router;
 
+    //静态创建授权
+    public static SystemUser authInterfaceList(List<SystemMenu> menuList, List<SystemButton> buttonList, String username) {
+        SystemUser systemUser = new SystemUser();
+        systemUser.username = username;
+        return systemUser.ofInterfaceList(menuList, buttonList);
+    }
+
     //为用户赋值权限
     public SystemUser ofInterfaceList(List<SystemMenu> menuList, List<SystemButton> buttonList) {
         this.systemInterfaceList = new HashSet<>();

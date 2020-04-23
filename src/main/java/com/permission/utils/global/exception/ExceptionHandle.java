@@ -29,7 +29,7 @@ public class ExceptionHandle {
             }
             return new GlobalResult(g.getCode(), g.getMessage());
         } else if (e instanceof DataIntegrityViolationException) {//唯一键数据
-            return new GlobalResult(401, "账号已存在");
+            return new GlobalResult(401, "相同数据已存在");
         } else if (e instanceof AuthenticationException) {
             return new GlobalResult(500, e.getMessage());
         } else {

@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ResultEnum {
+    FAILURE(100, "FAILURE"),
     WRONG_LOGIN(100, "账号或密码错误"),
     ACCOUNT_DOES_NOT_EXIST(100, "账号不存在"),
     WRONG_PASSWORD(100, "密码错误"),
@@ -32,7 +33,7 @@ public enum ResultEnum {
 
     LOGIN_SUCCESS(200, "登陆成功"),
     LOGOUT_SUCCESS(200, "登出成功"),
-    SUCCESS(200, "Success"),
+    SUCCESS(200, "SUCCESS"),
 
     UNKNOWN_TYPE(500, "Unknown type"),
     UNKNOWN_ERROR(500, "System error"),

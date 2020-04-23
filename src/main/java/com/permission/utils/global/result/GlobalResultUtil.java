@@ -61,7 +61,7 @@ public class GlobalResultUtil {
     }
 
     public static GlobalResult fail(Object object) {
-        return fail(ResultEnum.NULL_DATA, null);
+        return fail(ResultEnum.FAILURE, object);
     }
 
     public static GlobalResult fail(Integer code, String msg) {
@@ -69,7 +69,7 @@ public class GlobalResultUtil {
     }
 
     public static GlobalResult fail() {
-        return fail(ResultEnum.NULL_DATA, null);
+        return fail(ResultEnum.FAILURE, null);
     }
 
 
@@ -79,7 +79,7 @@ public class GlobalResultUtil {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             out = response.getWriter();
-            out.write(JSON.toJSONString(result,SerializerFeature.DisableCircularReferenceDetect));
+            out.write(JSON.toJSONString(result, SerializerFeature.DisableCircularReferenceDetect));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

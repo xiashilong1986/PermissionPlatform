@@ -16,6 +16,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -556,13 +557,45 @@ public class WeChatUtil {
         }
     }
 
+    /**
+     * 验证微信小程序文字
+     *
+     * @param content 验证的内容
+     * @return boolean
+     */
+    public static boolean appletCheckText(String content) {
+        try {
+
+            CloseableHttpClient httpclient = HttpClients.createDefault();
+
+            CloseableHttpResponse response;
+
+            HttpPost request = new HttpPost("https://api.weixin.qq.com/wxa/msg_sec_check?access_token=" + AppletAccessTokenFactory.get());
+            request.addHeader("Content-Type", "application/json;charset=UTF-8");
+
+            Map<String, String> paramMap = new HashMap<String, String>();
+            paramMap.put("content", content);
+            request.setEntity(new StringEntity(JSONObject.toJSONString(paramMap), ContentType.create("application/json", "utf-8")));
+
+            response = httpclient.execute(request);
+            HttpEntity httpEntity = response.getEntity();
+            String result = EntityUtils.toString(httpEntity, "UTF-8");// 转成string
+            JSONObject jso = JSONObject.parseObject(result);
+            return getResult(jso);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("----------------调用腾讯内容过滤系统出错------------------");
+            return true;
+        }
+    }
+
     private static boolean getResult(JSONObject jso) {
         Object e = jso.get("errcode");
         int errCode = (int) e;
         if (errCode == 0) {
             return true;
         } else if (errCode == 87014) {
-            log.info("-----------图片内容违规-----------");
+            log.info("-----------内容违规-----------");
             return false;
         }
         return true;

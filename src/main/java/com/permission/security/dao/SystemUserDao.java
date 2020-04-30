@@ -26,6 +26,8 @@ public interface SystemUserDao extends BaseJpaRepository<SystemUser, Long> {
     @EntityGraph(value = "SystemUser.role", type = EntityGraph.EntityGraphType.LOAD)
     Optional<SystemUser> findByUsername(String username);
 
+    Optional<SystemUser> getByUsername(String username);
+
     /**
      * 是否有绑定此角色的用户
      *

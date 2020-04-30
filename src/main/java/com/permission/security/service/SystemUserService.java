@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * **********************
@@ -121,4 +122,12 @@ public interface SystemUserService {
      * router : vue路由对象
      */
     Map<String, Object> authLogin(Long roleId, String authId, String ip);
+
+    /**
+     * 根据用户名获取用户
+     *
+     * @param username 用户名
+     * @return Optional
+     */
+    Optional<SystemUser> getByUsername(String username);
 }

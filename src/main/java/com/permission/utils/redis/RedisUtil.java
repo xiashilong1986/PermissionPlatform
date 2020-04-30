@@ -186,17 +186,17 @@ public class RedisUtil {
     }
 
     /**
-     * list 删除下标之前的数据
+     * list left remove
      *
      * @param key   主键
-     * @param index 集合下标
+     * @param count 删除的数量
      */
-    public static void listRemove(String key, long index) {
+    public static void listRemove(String key, long count) {
         Long size = listSize(key);
-        if (index > size) {
+        if (count > size) {
             throw new RuntimeException("redis index out of bounds");
         }
-        redisUtil.redisTemplate.opsForList().trim(key, index, size);
+        redisUtil.redisTemplate.opsForList().trim(key, count, size);
     }
 
 

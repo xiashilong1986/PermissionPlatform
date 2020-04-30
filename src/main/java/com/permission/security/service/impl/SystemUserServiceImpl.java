@@ -285,6 +285,17 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
         return map;
     }
 
+    /**
+     * 根据用户名获取用户
+     *
+     * @param username 用户名
+     * @return Optional
+     */
+    @Override
+    public Optional<SystemUser> getByUsername(String username) {
+        return dao.getByUsername(username);
+    }
+
 
     /**
      * Locates the user based on the username. In the actual implementation, the search

@@ -51,7 +51,7 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
     /**
      * 密码
      */
-    @Column(length = 100)
+    @Column(length = 200)
     private String password;
 
     /**

@@ -183,4 +183,18 @@ public class SystemUserController {
         service.modifyPassword(id, password, newPassword);
         return GlobalResultUtil.success();
     }
+
+    /**
+     * 修改用户密码(开放接口)
+     *
+     * @param id       主键
+     * @param password 密码
+     * @return GlobalResult
+     */
+    @AccessLimit(type = LimitType.MODIFY)
+    @PostMapping(value = "/auth/updatePassword")
+    public GlobalResult updatePassword(@NonNull Long id, @NonNull String password) {
+        service.modifyPassword(id, password);
+        return GlobalResultUtil.success();
+    }
 }

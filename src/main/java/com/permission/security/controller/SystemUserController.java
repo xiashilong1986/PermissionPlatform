@@ -167,4 +167,19 @@ public class SystemUserController {
     public GlobalResult getUserLoginContext(@PathVariable String username) {
         return GlobalResultUtil.success(service.getUserLoginContext(username));
     }
+
+
+    /**
+     * 修改用户密码(开放接口)
+     *
+     * @param id       主键
+     * @param password 密码
+     * @return GlobalResult
+     */
+    @AccessLimit(type = LimitType.MODIFY)
+    @PostMapping(value = "/auth/updatePassword")
+    public GlobalResult updatePassword(@NonNull Long id, @NonNull String password) {
+        service.modifyPassword(id, password);
+        return GlobalResultUtil.success();
+    }
 }

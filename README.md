@@ -1,2 +1,2 @@
 # PermissionPlatform
-自己封装的常用工具类
+基于spring boot 的常用工具类

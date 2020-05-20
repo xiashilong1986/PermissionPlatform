@@ -57,7 +57,7 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
     /**
      * 锁定 (0否,1是)
      */
-    @Column(insertable = false, columnDefinition = "int(1) default 0")
+    @Column(columnDefinition = "int(1) default 0")
     private Integer accountLocked;
 
     /**
@@ -161,6 +161,7 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
         s.creatorId = creatorId;
         s.userType = userType;
         s.uuId = UUID.randomUUID().toString();
+        s.accountLocked = 0;
         return s;
     }
 

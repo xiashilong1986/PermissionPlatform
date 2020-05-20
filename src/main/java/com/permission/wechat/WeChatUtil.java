@@ -148,8 +148,9 @@ public class WeChatUtil {
     public static Map<String, String> payForApplet(String orderNumber, Integer price, String body, String ip, String notifyUrl, String openId, String attach) throws Exception {
         Map<String, String> pay = pay(orderNumber, price, body, ip, notifyUrl, TradeType.JSAPI, openId, attach, appletWeChatPay);
         Map<String, String> map = new HashMap<>();
+        map.put("appId", WE_CHAT_APPLET_CONFIG.getAppID());
         map.put("timeStamp", String.valueOf(generateTimestamp()));
-        map.put("nonceStr", WXPayUtil.generateNonceStr());
+        map.put("nonceStr", pay.get("nonce_str"));
         map.put("package", "prepay_id=" + pay.get("prepay_id"));
         map.put("signType", WXPayConstants.MD5);
         map.put("paySign", WXPayUtil.generateSignature(map, WE_CHAT_APPLET_CONFIG.getApiKey()));

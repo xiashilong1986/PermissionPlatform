@@ -64,12 +64,13 @@ public class JwtAuthenticationTokenFilter extends BasicAuthenticationFilter {
             //redis 中没有该用户 拒绝访问
             if (!RedisUtil.hasKey(username)) {
                 throw new JwtIpException(ResultEnum.PERMISSION_CHANGE);
-            } else { //验证token一致性
-                String token = (String) RedisUtil.get(username);
-                if (!accessToken.equals(token)) {
-                    throw new JwtIpException(ResultEnum.SESSION_ERROR);
-                }
             }
+//            else { //验证token一致性
+//                String token = (String) RedisUtil.get(username);
+//                if (!accessToken.equals(token)) {
+//                    throw new JwtIpException(ResultEnum.SESSION_ERROR);
+//                }
+//            }
             //获取权限（角色）
             List<GrantedAuthority> authorities = new ArrayList<>();
             String authority = claims.get(JwtTokenUtil.authHeader).toString();

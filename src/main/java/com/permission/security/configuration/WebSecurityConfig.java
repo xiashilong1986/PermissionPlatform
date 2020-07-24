@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //设置session
+        //设置session 单点登录
 //        http.sessionManagement().maximumSessions(1).expiredSessionStrategy(sessionInformationExpiredStrategyHandler);
         // 关闭跨站请求防护
         http.csrf().disable()

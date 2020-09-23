@@ -29,7 +29,7 @@ public class SystemButton extends AbstractEntity {
     /**
      * 名称
      */
-    @Column(unique = true, length = 50)
+    @Column(length = 50)
     private String name;
 
     /**

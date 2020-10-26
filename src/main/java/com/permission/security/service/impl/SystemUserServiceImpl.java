@@ -3,6 +3,7 @@ package com.permission.security.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.permission.security.accesslimit.AccessLimit;
 import com.permission.security.dao.SystemUserDao;
+import com.permission.security.entity.SystemButton;
 import com.permission.security.entity.SystemMenu;
 import com.permission.security.entity.SystemRole;
 import com.permission.security.entity.SystemUser;
@@ -259,15 +260,14 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
         if (!StringUtils.isEmpty(role.getMenuIdList())) {
             menuList = systemMenuService.getAll(role.getMenuIdList());
         }
-//        List<SystemButton> buttonList = new ArrayList<>();
-//        if (!StringUtils.isEmpty(role.getButtonIdList())) {
-//            buttonList = systemButtonService.getAll(role.getButtonIdList());
-//        }
+        List<SystemButton> buttonList = new ArrayList<>();
+        if (!StringUtils.isEmpty(role.getButtonIdList())) {
+            buttonList = systemButtonService.getAll(role.getButtonIdList());
+        }
         //验证角色权限,并赋值
         SystemUser systemUser;
-//        if (!menuList.isEmpty() || !buttonList.isEmpty()) {
-        if (!menuList.isEmpty()) {
-            systemUser = SystemUser.authInterfaceList(menuList, authId);
+        if (!menuList.isEmpty() || !buttonList.isEmpty()) {
+            systemUser = SystemUser.authInterfaceList(menuList, buttonList, authId);
         } else {
             throw GlobalException.exception100("授权登陆的角色无任何权限");
         }
@@ -320,15 +320,15 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
             if (!StringUtils.isEmpty(systemUser.getSystemRole().getMenuIdList())) {
                 menuList = systemMenuService.getAll(systemUser.getSystemRole().getMenuIdList());
             }
-//            List<SystemButton> buttonList = new ArrayList<>();
-//            if (!StringUtils.isEmpty(systemUser.getSystemRole().getButtonIdList())) {
-//                buttonList = systemButtonService.getAll(systemUser.getSystemRole().getButtonIdList());
-//            }
+            List<SystemButton> buttonList = new ArrayList<>();
+            if (!StringUtils.isEmpty(systemUser.getSystemRole().getButtonIdList())) {
+                buttonList = systemButtonService.getAll(systemUser.getSystemRole().getButtonIdList());
+            }
 //            if (menuList.isEmpty() && buttonList.isEmpty()) {
 //                return systemUser;
 //            }
 //            return systemUser.ofInterfaceList(menuList, buttonList);
-            return menuList.isEmpty() ? systemUser : systemUser.builder(menuList);
+            return menuList.isEmpty() ? systemUser : systemUser.builder(menuList).ofInterfaceList(menuList, buttonList);
         }
         //账号不存在
         throw new UsernameNotFoundException(ResultEnum.ACCOUNT_DOES_NOT_EXIST.getMsg());

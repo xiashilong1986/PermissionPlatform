@@ -122,10 +122,10 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
 //        systemUser.username = username;
 //        return systemUser.ofInterfaceList(menuList, buttonList);
 //    }
-    public static SystemUser authInterfaceList(List<SystemMenu> menuList,String username) {
+    public static SystemUser authInterfaceList(List<SystemMenu> menuList, List<SystemButton> buttonList, String username) {
         SystemUser systemUser = new SystemUser();
         systemUser.username = username;
-        return systemUser.builder(menuList);
+        return systemUser.builder(menuList).ofInterfaceList(menuList, buttonList);
     }
 
     //为用户赋值权限
@@ -158,7 +158,7 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
                 }
             }
             //转换路由
-            this.router = RouterUtil.createRouter(menuList);
+//            this.router = RouterUtil.createRouter(menuList);
         }
         return this;
     }

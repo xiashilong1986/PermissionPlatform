@@ -8,6 +8,7 @@ import com.permission.security.entity.SystemRole;
 import com.permission.security.service.SystemButtonService;
 import com.permission.security.service.SystemMenuService;
 import com.permission.security.service.SystemRoleService;
+import com.permission.utils.global.exception.GlobalException;
 import com.permission.utils.global.exception.NullException;
 import com.permission.utils.string.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,10 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     @Override
     @Transactional
     public void deleteChild(Long id) {
+        List<SystemMenu> list = dao.findByPid(id);
+        if (!list.isEmpty()) {
+            throw GlobalException.exception100("该菜单包含子菜单,无法删除!");
+        }
         //删除菜单下所有按钮
         List<Long> buttonIdList = systemButtonService.deleteAll(id);
         systemRoleService.updateAllRolePermission(Collections.singletonList(id), buttonIdList);

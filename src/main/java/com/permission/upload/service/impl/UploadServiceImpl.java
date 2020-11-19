@@ -1,5 +1,6 @@
 package com.permission.upload.service.impl;
 
+import com.permission.upload.Base64DecodeMultipartFile;
 import com.permission.upload.service.UploadService;
 import com.permission.utils.global.exception.GlobalException;
 import com.permission.utils.global.result.GlobalResult;
@@ -141,6 +142,23 @@ public class UploadServiceImpl implements UploadService {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(args);
         }
+    }
+
+    /**
+     * base64文件上传
+     *
+     * @param base64     base64字符串
+     * @param folderName 文件夹名
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    @Override
+    public GlobalResult uploadBase64(String base64, String folderName) throws Exception {
+        if (base64.isEmpty()) {
+            throw new GlobalException(ResultEnum.NO_FILE);
+        }
+        String filesName = uploadFile(Base64DecodeMultipartFile.base64Convert(base64), folderName);
+        return GlobalResultUtil.success(ResultEnum.SUCCESS, filesName);
     }
 
     /**

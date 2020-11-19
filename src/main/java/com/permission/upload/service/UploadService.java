@@ -48,4 +48,14 @@ public interface UploadService {
      * @throws IOException io
      */
     void deleteFiles(List<String> filePathList) throws IOException;
+
+    /**
+     * base64文件上传
+     *
+     * @param base64     base64字符串
+     * @param folderName 文件夹名
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    GlobalResult uploadBase64(String base64, String folderName) throws Exception;
 }

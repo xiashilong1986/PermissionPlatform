@@ -86,4 +86,18 @@ public class UploadController {
         return GlobalResultUtil.success();
     }
 
+    /**
+     * base64文件上传
+     *
+     * @param base64     base64字符串
+     * @param folderName 文件夹名
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    @AccessLimit(type = LimitType.MODIFY)
+    @PostMapping("/open/uploadBase64")
+    public GlobalResult uploadBase64(String base64, String folderName) throws Exception {
+        return uploadService.uploadBase64(base64, folderName);
+    }
+
 }

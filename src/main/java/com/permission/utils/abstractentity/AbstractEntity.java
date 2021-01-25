@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Data
-public class AbstractEntity implements Serializable {
+public abstract class AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = -4645099932603716596L;
     /**

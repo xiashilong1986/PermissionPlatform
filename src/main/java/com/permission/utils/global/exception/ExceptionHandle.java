@@ -24,7 +24,7 @@ public class ExceptionHandle {
     public GlobalResult handle(Exception e) {
         if (e instanceof GlobalException) {
             GlobalException g = (GlobalException) e;
-            if (!g.getCode().equals(100) || !g.getMsg().equals(ResultEnum.NULL_DATA.getMsg())) {
+            if (!g.getCode().equals(100) && !g.getMsg().equals(ResultEnum.NULL_DATA.getMsg())) {
                 log.error("[GlobalException]", g);
             }
             return new GlobalResult(g.getCode(), g.getMessage());

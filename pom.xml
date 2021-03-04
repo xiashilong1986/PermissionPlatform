@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.apse</groupId>
     <artifactId>utils</artifactId>
-    <version>0.2.8-SNAPSHOT</version>
+    <version>0.2.9-SNAPSHOT</version>
     <name>byteApse</name>
     <description>Rights management system</description>
 

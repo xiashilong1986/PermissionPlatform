@@ -2,6 +2,7 @@ package com.permission.security.entity;
 
 import com.permission.utils.abstractentity.AbstractEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -28,7 +29,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SystemMenu extends AbstractEntity {
 
     /**

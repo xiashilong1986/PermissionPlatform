@@ -2,6 +2,7 @@ package com.permission.security.entity;
 
 import com.permission.utils.abstractentity.AbstractEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -23,7 +24,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SystemButton extends AbstractEntity {
 
     /**

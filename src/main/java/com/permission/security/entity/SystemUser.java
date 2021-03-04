@@ -3,6 +3,7 @@ package com.permission.security.entity;
 import com.permission.utils.abstractentity.AbstractEntity;
 import com.permission.utils.router.RouterUtil;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +38,9 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SystemUser extends AbstractEntity implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1649063607905998663L;

@@ -2,6 +2,7 @@ package com.permission.security.controller;
 
 import com.permission.security.accesslimit.AccessLimit;
 import com.permission.security.accesslimit.LimitType;
+import com.permission.security.entity.SystemMenu;
 import com.permission.security.service.SystemMenuService;
 import com.permission.utils.global.result.GlobalResult;
 import com.permission.utils.global.result.GlobalResultUtil;
@@ -31,41 +32,25 @@ public class SystemMenuController {
     /**
      * 创建菜单
      *
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
-     * @param menuType       前后端页面标识(0后端,1前端)
+     * @param systemMenu <see>SystemMenu</see>
      * @return GlobalResult
      */
     @AccessLimit(type = LimitType.MODIFY)
     @PostMapping(value = "/add")
-    public GlobalResult add(@NonNull String path, @NonNull String name, @NonNull String component, @NonNull String menuInterface, Integer sort, Long pid, Boolean navigationShow, Integer menuType) {
-        service.add(path, name, component, menuInterface, sort, pid, navigationShow, menuType);
-        return GlobalResultUtil.success();
+    public GlobalResult add(SystemMenu systemMenu) {
+        return GlobalResultUtil.success(service.add(systemMenu));
     }
 
     /**
      * 修改菜单
      *
-     * @param id             主键
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
+     * @param systemMenu <see>SystemMenu</see>
      * @return GlobalResult
      */
     @AccessLimit(type = LimitType.MODIFY)
-    @PostMapping(value = "/update/{id}")
-    public GlobalResult update(@PathVariable Long id, @NonNull String path, @NonNull String name, @NonNull String component, @NonNull String menuInterface, Integer sort, @NonNull Long pid, Boolean navigationShow) {
-        service.update(id, path, name, component, menuInterface, sort, pid, navigationShow);
-        return GlobalResultUtil.success();
+    @PostMapping(value = "/update")
+    public GlobalResult update(SystemMenu systemMenu) {
+        return GlobalResultUtil.success(service.update(systemMenu));
     }
 
     /**

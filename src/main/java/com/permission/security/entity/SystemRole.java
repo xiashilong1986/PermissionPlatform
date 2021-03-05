@@ -2,12 +2,12 @@ package com.permission.security.entity;
 
 import com.permission.utils.abstractentity.AbstractEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 
 /**
  * **********************
@@ -25,7 +25,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SystemRole extends AbstractEntity {
 
     /**

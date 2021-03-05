@@ -19,32 +19,18 @@ public interface SystemMenuService {
     /**
      * 创建菜单
      *
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
-     * @param menuType       前后端页面标识(0后端,1前端)
+     * @param systemMenu <see>SystemMenu</see>
      * @return SystemMenu
      */
-    SystemMenu add(String path, String name, String component, String menuInterface, Integer sort, Long pid, Boolean navigationShow, Integer menuType);
+    SystemMenu add(SystemMenu systemMenu);
 
     /**
      * 修改菜单
      *
-     * @param id             主键
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
+     * @param systemMenu <see>SystemMenu</see>
      * @return SystemMenu
      */
-    SystemMenu update(Long id, String path, String name, String component, String menuInterface, Integer sort, Long pid, Boolean navigationShow);
+    SystemMenu update(SystemMenu systemMenu);
 
     /**
      * 删除主菜单

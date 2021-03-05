@@ -8,6 +8,7 @@ import com.permission.security.entity.SystemRole;
 import com.permission.security.service.SystemButtonService;
 import com.permission.security.service.SystemMenuService;
 import com.permission.security.service.SystemRoleService;
+import com.permission.utils.global.exception.GlobalException;
 import com.permission.utils.global.exception.NullException;
 import com.permission.utils.string.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,43 +53,23 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     /**
      * 创建菜单
      *
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
-     * @param menuType       前后端页面标识(0后端,1前端)
+     * @param systemMenu <see>SystemMenu</see>
      * @return SystemMenu
      */
     @Override
-    public SystemMenu add(String path, String name, String component, String menuInterface, Integer sort, Long pid, Boolean navigationShow, Integer menuType) {
-        return dao.save(
-                SystemMenu.of(
-                        path, name, component, menuInterface, sort, pid, navigationShow, menuType)
-        );
+    public SystemMenu add(SystemMenu systemMenu) {
+        return dao.save(systemMenu);
     }
 
     /**
      * 修改菜单
      *
-     * @param id             主键
-     * @param path           路径
-     * @param name           名称
-     * @param component      路由变量名
-     * @param menuInterface  页面对应接口,逗号分隔多个接口
-     * @param sort           菜单排序
-     * @param pid            父菜单id 如果为0则为顶级菜单
-     * @param navigationShow 是否在导航栏显示(0不显示,1显示)
+     * @param systemMenu <see>SystemMenu</see>
      * @return SystemMenu
      */
     @Override
-    public SystemMenu update(Long id, String path, String name, String component, String menuInterface, Integer sort, Long pid, Boolean navigationShow) {
-        return dao.update(
-                SystemMenu.of(
-                        id, path, name, component, menuInterface, sort, pid, navigationShow)
-        );
+    public SystemMenu update(SystemMenu systemMenu) {
+        return dao.update(systemMenu);
     }
 
     /**
@@ -119,6 +100,10 @@ public class SystemMenuServiceImpl implements SystemMenuService {
     @Override
     @Transactional
     public void deleteChild(Long id) {
+        List<SystemMenu> list = dao.findByPid(id);
+        if (!list.isEmpty()) {
+            throw GlobalException.exception100("该菜单包含子菜单,无法删除!");
+        }
         //删除菜单下所有按钮
         List<Long> buttonIdList = systemButtonService.deleteAll(id);
         systemRoleService.updateAllRolePermission(Collections.singletonList(id), buttonIdList);

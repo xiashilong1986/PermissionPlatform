@@ -1,6 +1,5 @@
 package com.permission.security.handler;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.permission.security.entity.SystemUser;
 import com.permission.security.jwt.JwtTokenUtil;
@@ -39,8 +38,8 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
         map.put("tokenExpireTime", JwtTokenUtil.tokenExpireTime);
-        map.put("router", systemUser.getRouter());
-        map.put("user", SystemUser.of(systemUser.getId(), systemUser.getUsername(), systemUser.getRoleId(), systemUser.getAccountLocked()));
+//        map.put("router", systemUser.getRouter());
+        map.put("user", SystemUser.of(systemUser.getId(), systemUser.getUsername(), systemUser.getRoleId(), systemUser.getAccountLocked(), systemUser.getMenuList()));
         //为web-view保存信息
         RedisUtil.set("web-view" + systemUser.getUsername(), JSONObject.toJSONString(map), JwtTokenUtil.tokenExpireTime);
         //在此处拼接前端路由

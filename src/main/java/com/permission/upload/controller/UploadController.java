@@ -44,19 +44,19 @@ public class UploadController {
         return uploadService.uploadFiles(request, folderName);
     }
 
-    /**
-     * 小程序文件上传
-     *
-     * @param request    请求
-     * @param folderName 文件夹
-     * @return GlobalResult
-     * @throws Exception e
-     */
-    @AccessLimit(type = LimitType.MODIFY)
-    @PostMapping(value = "/open/appletUploadFiles")
-    public GlobalResult appletUploadFiles(HttpServletRequest request, String folderName) throws Exception {
-        return uploadService.appletUploadFiles(request, folderName);
-    }
+//    /**
+//     * 小程序文件上传
+//     *
+//     * @param request    请求
+//     * @param folderName 文件夹
+//     * @return GlobalResult
+//     * @throws Exception e
+//     */
+//    @AccessLimit(type = LimitType.MODIFY)
+//    @PostMapping(value = "/open/appletUploadFiles")
+//    public GlobalResult appletUploadFiles(HttpServletRequest request, String folderName) throws Exception {
+//        return uploadService.appletUploadFiles(request, folderName);
+//    }
 
     /**
      * 自定义文件名上传
@@ -84,6 +84,20 @@ public class UploadController {
     public GlobalResult delete(@RequestBody List<String> filePathList) throws Exception {
         uploadService.deleteFiles(filePathList);
         return GlobalResultUtil.success();
+    }
+
+    /**
+     * base64文件上传
+     *
+     * @param base64     base64字符串
+     * @param folderName 文件夹名
+     * @return GlobalResult
+     * @throws Exception e
+     */
+    @AccessLimit(type = LimitType.MODIFY)
+    @PostMapping("/open/uploadBase64")
+    public GlobalResult uploadBase64(String base64, String folderName) throws Exception {
+        return uploadService.uploadBase64(base64, folderName);
     }
 
 }

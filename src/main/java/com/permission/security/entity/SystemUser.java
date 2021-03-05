@@ -3,6 +3,7 @@ package com.permission.security.entity;
 import com.permission.utils.abstractentity.AbstractEntity;
 import com.permission.utils.router.RouterUtil;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +38,9 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SystemUser extends AbstractEntity implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1649063607905998663L;
@@ -110,11 +113,22 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
     @Transient
     private List<RouterUtil.Router> router;
 
+    /**
+     * 菜单集合
+     */
+    @Transient
+    private List<SystemMenu> menuList;
+
     //静态创建授权
+//    public static SystemUser authInterfaceList(List<SystemMenu> menuList, List<SystemButton> buttonList, String username) {
+//        SystemUser systemUser = new SystemUser();
+//        systemUser.username = username;
+//        return systemUser.ofInterfaceList(menuList, buttonList);
+//    }
     public static SystemUser authInterfaceList(List<SystemMenu> menuList, List<SystemButton> buttonList, String username) {
         SystemUser systemUser = new SystemUser();
         systemUser.username = username;
-        return systemUser.ofInterfaceList(menuList, buttonList);
+        return systemUser.builder(menuList).ofInterfaceList(menuList, buttonList);
     }
 
     //为用户赋值权限
@@ -147,8 +161,19 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
                 }
             }
             //转换路由
-            this.router = RouterUtil.createRouter(menuList);
+//            this.router = RouterUtil.createRouter(menuList);
         }
+        return this;
+    }
+
+    /**
+     * 构建权限属性
+     *
+     * @param menuList 菜单集合
+     * @return SystemUser
+     */
+    public SystemUser builder(List<SystemMenu> menuList) {
+        this.menuList = menuList;
         return this;
     }
 
@@ -190,12 +215,13 @@ public class SystemUser extends AbstractEntity implements Serializable, UserDeta
     }
 
     //返回给用户端
-    public static SystemUser of(Long id, String username, Long roleId, Integer accountLocked) {
+    public static SystemUser of(Long id, String username, Long roleId, Integer accountLocked, List<SystemMenu> menuList) {
         SystemUser s = new SystemUser();
         s.setId(id);
         s.username = username;
         s.roleId = roleId;
         s.accountLocked = accountLocked;
+        s.menuList = menuList;
         return s;
     }
 

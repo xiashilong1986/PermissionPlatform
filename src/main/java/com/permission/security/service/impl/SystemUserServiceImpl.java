@@ -279,7 +279,8 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
         map.put("tokenExpireTime", JwtTokenUtil.tokenExpireTime);
-        map.put("router", systemUser.getRouter());
+//        map.put("router", systemUser.getRouter());
+        map.put("user", systemUser);
         //为web-view保存信息
         RedisUtil.set("web-view" + systemUser.getUsername(), JSONObject.toJSONString(map), JwtTokenUtil.tokenExpireTime);
         return map;
@@ -323,10 +324,11 @@ public class SystemUserServiceImpl implements UserDetailsService, SystemUserServ
             if (!StringUtils.isEmpty(systemUser.getSystemRole().getButtonIdList())) {
                 buttonList = systemButtonService.getAll(systemUser.getSystemRole().getButtonIdList());
             }
-            if (menuList.isEmpty() && buttonList.isEmpty()) {
-                return systemUser;
-            }
-            return systemUser.ofInterfaceList(menuList, buttonList);
+//            if (menuList.isEmpty() && buttonList.isEmpty()) {
+//                return systemUser;
+//            }
+//            return systemUser.ofInterfaceList(menuList, buttonList);
+            return menuList.isEmpty() ? systemUser : systemUser.builder(menuList).ofInterfaceList(menuList, buttonList);
         }
         //账号不存在
         throw new UsernameNotFoundException(ResultEnum.ACCOUNT_DOES_NOT_EXIST.getMsg());

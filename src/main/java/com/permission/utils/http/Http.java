@@ -18,7 +18,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +82,7 @@ public class Http {
     public static String doPost(String url, Map<String, String> headerMap, Map<String, Object> paramMap) {
         if (null != paramMap && !paramMap.isEmpty()) {
             String s = JSONObject.toJSONString(paramMap);
-            StringEntity httpEntity = new StringEntity(s, "utf-8");
+            StringEntity httpEntity = new StringEntity(s, Consts.UTF_8);
             return doPost(url, headerMap, httpEntity, null);
         }
         return "";
@@ -106,7 +105,7 @@ public class Http {
     public static String doPost(String url, Map<String, String> headerMap, List<Map<String, Object>> paramMap) {
         String s = JSONArray.toJSONString(paramMap);
         log.info("post 请求参数 : {}", s);
-        StringEntity httpEntity = new StringEntity(s, "utf-8");
+        StringEntity httpEntity = new StringEntity(s, Consts.UTF_8);
         return doPost(url, headerMap, httpEntity, null);
     }
 
@@ -135,11 +134,7 @@ public class Http {
             httpPost.setEntity(stringEntity);
         }
         if (!nameValuePairList.isEmpty()) {
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, Consts.UTF_8));
         }
         try {
             // httpClient对象执行post请求,并返回响应参数对象
